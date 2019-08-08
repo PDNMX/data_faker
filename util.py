@@ -1,4 +1,5 @@
 from faker import Faker
+from faker.providers import ssn
 import ast
 import random
 from timeit import default_timer as timer
@@ -6,6 +7,9 @@ from pathlib import Path
 import pandas as pd
 from dotmap import DotMap
 from datetime import datetime
+import random_data
+import unicodedata
+import re
 
 
 fake = Faker('es_MX')
@@ -48,12 +52,25 @@ def date_time(args=None):
     if args is not None and len(args) > 0:
         if args[0] == 'now':
             return datetime.now().isoformat()
+        if args[0] == 'birthday':
+            return fake.date_of_birth(tzinfo=None, minimum_age=18, maximum_age=100).strftime("%Y-%m-%d")
 
     return fake.date_time().isoformat()
 
 
-def company():
-    return fake.company()
+def company(args=None):
+    company_name = fake.company()
+    if args is not None and len(args) > 0:
+        if args[0] == 'clean':
+            cleanName0 = unicodedata.normalize('NFD', company_name)
+            cleanName1 = re.sub(r'-', ' ', cleanName0)
+            cleanName2 = re.sub(r'[^\w\s]|_/g', '', cleanName1)
+            cleanName3 = re.sub(r'\s+/g', ' ', cleanName2)
+            company_name = cleanName3
+
+            return company_name
+
+    return company_name
 
 
 def email():
@@ -64,8 +81,47 @@ def uri():
     return fake.uri()
 
 
+def curp():
+    return fake.curp()
+
+def rfc(natural=True):
+    return fake.rfc()
+
+def ssn():
+    return fake.ssn()
+
+def building_number():
+    return fake.building_number()
+
+def fake_address():
+    return random_data.get_address()
+
+def bban():
+    return fake.bban()
+
+def year(args):
+    if (args[0]) == "int":
+        return int(fake.year())
+    else:
+        return fake.year()
+
+def boolean():
+    return fake.boolean()
+
 def full_name():
     return fake.name()
+
+def fake_dependent():
+    return random_data.dependiente()
+
+def lorem_text():
+    return fake.paragraph(nb_sentences=3, variable_nb_sentences=True, ext_word_list=None)
+
+def custom_string(args):
+    return args[0]
+
+def currency_code():
+    return fake.currency_code()
 
 
 def first_name():
@@ -145,6 +201,13 @@ fakers = {
     'email': email,
     'full_name': full_name,
     'uri': uri,
+    'curp': curp,
+    'rfc': rfc,
+    'building_number': building_number,
+    'fake_address': fake_address,
+    'fake_dependent': fake_dependent,
+    'custom_string': custom_string,
+    'currency_code': currency_code,
     'last_name': last_name,
     'first_name': first_name,
     'country_code': country_code,
@@ -159,7 +222,11 @@ fakers = {
     'government_level': government_level,
     'in_range': in_range,
     'int': fake_int,
-    'seed': from_seed
+    'seed': from_seed,
+    'year': year,
+    'boolean': boolean,
+    'lorem_text': lorem_text,
+    'bban': bban
 }
 
 
@@ -226,4 +293,3 @@ class Seed:
 
     def set_df(self, df):
         self.df = df
-

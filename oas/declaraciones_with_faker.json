@@ -219,7 +219,7 @@
           },
           "results" : {
             "type" : "array",
-            "faker": "int:6",
+            "faker": "int:5",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -331,19 +331,21 @@
               "curp" : {
                 "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                 "type" : "string",
-                "example" : "BEML920313HMCLNS09"
+                "example" : "BEML920313HMCLNS09",
+                "faker": "curp"
               },
               "rfc" : {
                 "description" : "Se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial",
                 "type" : "string",
-                "example" : "GOAP780710RH7"
+                "example" : "GOAP780710RH7",
+                "faker": "rfc"
               },
               "fecha_nacimiento" : {
                 "type" : "string",
                 "format" : "date",
                 "description" : "Formato de fechas ISO 8601 con notación yyyy-mm-dd. Este dato es información confidencial",
                 "example" : "2010-07-26",
-                "faker": "date_time"
+                "faker": "date_time:birthday"
               },
               "numero_identificacion_oficial" : {
                 "type" : "string",
@@ -469,18 +471,22 @@
                   "numExt" : {
                     "type" : "string",
                     "description" : "Número exterior del domicilio",
-                    "example" : "24"
+                    "example" : "24",
+                    "faker": "building_number"
                   },
                   "numInt" : {
                     "type" : "string",
                     "description" : "Número interior del domicilio",
-                    "example" : "48"
+                    "example" : "48",
+                    "faker": "building_number"
                   }
-                }
+                },
+                "faker": "fake_address"
               },
               "estado_civil" : {
                 "description" : "Es la condición del Declarante en función de si tiene o no pareja y su situación legal respecto a ello, de conformidad con la legislación civil aplicable, incluyendo además opciones comunes no contempladas por el registro civil.",
                 "type" : "object",
+                "faker": "from_catalog:catEstadoCivil",
                 "properties" : {
                   "codigo" : {
                     "type" : "string",
@@ -498,6 +504,7 @@
               "regimen_matrimonial" : {
                 "description" : "Especificar el régimen matrimonial: (i) sociedad conyugal, (ii) por separación de bienes o (iii) mixto.",
                 "type" : "object",
+                "faker": "from_catalog:catRegimenMatrimonial",
                 "properties" : {
                   "codigo" : {
                     "type" : "string",
@@ -522,20 +529,24 @@
             "type" : "object",
             "properties" : {
               "grado_maximo_escolaridad" : {
-                "$ref" : "#/components/schemas/grado_academico"
+                "$ref" : "#/components/schemas/grado_academico",
+                "faker": "from_catalog:catGradoAcademico"
               },
               "grados_academicos" : {
                 "type" : "array",
+                "faker": "in_range:1:3",
                 "items" : {
                   "type" : "object",
                   "properties" : {
                     "grado_obtenido" : {
-                      "$ref" : "#/components/schemas/grado_academico"
+                      "$ref" : "#/components/schemas/grado_academico",
+                      "faker": "from_catalog:catGradoAcademico"
                     },
                     "institucion_educativa" : {
                       "description" : "Se deberá escribir el nombre de la institución donde se realizaron los estudios. En caso de que la institución esté en el extranjero se debera llenar al menos el campo país.",
                       "type" : "string",
-                      "example" : "La Universidad Nacionalista México"
+                      "example" : "La Universidad Nacionalista México",
+                      "faker": "from_catalog:instituciones_educativas"
                     },
                     "lugar_institucion_educativa" : {
                       "type" : "object",
@@ -575,6 +586,7 @@
                         },
                         "municipio" : {
                           "type" : "object",
+                          "faker": "from_catalog:catunMunicipios",
                           "properties" : {
                             "nom_agem" : {
                               "type" : "string",
@@ -593,10 +605,12 @@
                     "carrera" : {
                       "type" : "string",
                       "description" : "Seleccionar el nombre de la carrera o de los estudios realizados.",
-                      "example" : "Ing. en Sistemas Computacionales"
+                      "example" : "Ing. en Sistemas Computacionales",
+                      "faker": "from_catalog:carrerasEducativas"
                     },
                     "estatus" : {
                       "description" : "Se deberá seleccionar si se encuentra cursando los estudios, si ya se finalizaron o si está trunco.",
+                      "faker": "from_catalog:catEstatusEstudios",
                       "properties" : {
                         "codigo" : {
                           "type" : "string",
@@ -615,10 +629,12 @@
                       "type" : "integer",
                       "maxLength" : 4,
                       "description" : "Se deberá señalar el año en que finalizó sus últimos estudios.",
-                      "example" : 2005
+                      "example" : 2005,
+                      "faker": "year:int"
                     },
                     "documento_obtenido" : {
                       "description" : "Seleccionar la opción que corresponda de entre: (i) boleta; (ii) certificado; (iii) constancia; (iv) título o (v) diploma.",
+                      "faker": "from_catalog:catDocumentoObtenido",
                       "properties" : {
                         "codigo" : {
                           "type" : "string",
@@ -636,7 +652,8 @@
                     "cedula_profesional" : {
                       "type" : "string",
                       "description" : "Deberá señalar el número de cédula profesional del Declarante (para licenciaturas y posgrados en México).",
-                      "example" : "2094884"
+                      "example" : "2094884",
+                      "faker": "id"
                     }
                   }
                 }
@@ -657,36 +674,43 @@
                 "type" : "string",
                 "description" : "Se deberá señalar el nombre, tipo, clasificación o cualquier identificador que corresponde del empleo, cargo o comisión.",
                 "example" : "Director General de Datos Abiertos",
-                "faker": "job"
+                "faker": "from_catalog:catTrabajos"
               },
               "nivel_gobierno" : {
-                "$ref" : "#/components/schemas/nivel_orden_gobierno"
+                "$ref" : "#/components/schemas/nivel_orden_gobierno",
+                "faker": "from_catalog:catNivelOrdenGobierno"
               },
               "poder_juridico" : {
-                "$ref" : "#/components/schemas/poder"
+                "$ref" : "#/components/schemas/poder",
+                "faker": "from_catalog:catPoder"
               },
               "contratado_honorarios" : {
                 "description" : "Se deberá señalar si está contratado por honorarios (sí/no).",
-                "type" : "boolean"
+                "type" : "boolean",
+                "faker": "boolean"
               },
               "nivel_encargo" : {
                 "type" : "string",
                 "description" : "Es el que señala en la información administrativa correspondiente.",
-                "example" : "CA0001"
+                "example" : "CA0001",
+                "faker": "id"
               },
               "area_adscripcion" : {
                 "type" : "string",
                 "description" : "Especificar el nombre de la unidad administrativa u homóloga de su adscripción, según corresponda.",
-                "example" : "Unidad de Política Regulatoria"
+                "example" : "Unidad de Política Regulatoria",
+                "faker": "from_catalog:areasAdscripcion"
               },
               "fecha_posesion" : {
-                "$ref" : "#/components/schemas/fecha"
+                "$ref" : "#/components/schemas/fecha",
+                "faker": "date_time:birthday"
               },
               "lugar_ubicacion" : {
                 "$ref" : "#/components/schemas/lugar_registro"
               },
               "direccion_encargo" : {
-                "$ref" : "#/components/schemas/domicilio"
+                "$ref" : "#/components/schemas/domicilio",
+                "faker": "fake_address"
               },
               "telefono_laboral" : {
                 "type" : "object",
@@ -694,32 +718,45 @@
                   "numero" : {
                     "type" : "string",
                     "description" : "Número teléfonico estandarizado http://www.itu.int/dms_pub/itu-t/opb/sp/T-SP-E.164D-2009-PDF-S.pdf. Este dato es información confidencial",
-                    "example" : "+525510203040"
+                    "example" : "+525510203040",
+                    "faker": "phone_number"
                   },
                   "extension" : {
                     "type" : "integer",
                     "description" : "Extensión del número laboral, en caso de aplicar",
-                    "example" : 1020
+                    "example" : 1020,
+                    "faker": "year:int"
                   }
                 }
               },
               "sector_industria" : {
-                "$ref" : "#/components/schemas/sector_industria"
+                "$ref" : "#/components/schemas/sector_industria",
+                "faker": "from_catalog:sectorIndustrial"
               },
               "funciones_principales" : {
-                "$ref" : "#/components/schemas/funciones"
+                "faker": "from_catalog:catFunciones",
+                 "properties" : {
+                    "codigo" : {
+                      "type" : "string"
+                    },
+                    "valor" : {
+                      "type" : "string"
+                    }
+                  }
               }
             }
           },
           "experiencia_laboral" : {
             "description" : "En este apartado se deberá proporcionar información correspondiente a los últimos diez años de experiencia laboral. Se llenará la información relativa a todos los encargos, empleos o comisiones públicos o privados que se hayan tenido en dicho periodo.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
                 "ambito" : {
                   "description" : "Se deberá señalar si se ha pertenecido al sector público, privado o social. Si se elige la opción de sector público, se deberá, además señalar los siguientes de este apartado",
                   "type" : "object",
+                  "faker": "from_catalog:catAmbito",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -737,41 +774,51 @@
                   "$ref" : "#/components/schemas/nivel_orden_gobierno"
                 },
                 "poder_ente" : {
-                  "$ref" : "#/components/schemas/poder"
+                  "$ref" : "#/components/schemas/poder",
+                  "faker": "from_catalog:catPoder"
                 },
                 "nombre_institucion" : {
                   "type" : "string",
                   "description" : "Se deberá especificar el nombre de la institución en que se desempeñó profesionalmente.",
-                  "example" : "Instituto Federal de Telecomunicaciones"
+                  "example" : "Instituto Federal de Telecomunicaciones",
+                  "faker": "from_catalog:instituciones"
                 },
                 "unidad_administrativa" : {
                   "type" : "string",
                   "description" : "Especificar el nombre de la unidad administrativa en la que prestó sus servicios el Declarante.",
-                  "example" : "Unidad de Política Regulatoria"
+                  "example" : "Unidad de Política Regulatoria",
+                  "faker": "from_catalog:areasAdscripcion"
                 },
                 "direccion" : {
-                  "$ref" : "#/components/schemas/domicilio"
+                  "$ref" : "#/components/schemas/domicilio",
+                  "faker": "fake_address"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "jerarquia_rango" : {
                   "type" : "string",
-                  "description" : "Se deberá indicar la jerarquía o rango ocupado"
+                  "description" : "Se deberá indicar la jerarquía o rango ocupado",
+                  "faker": "job"
                 },
                 "cargo_puesto" : {
                   "type" : "string",
                   "description" : "Se deberá indicar el puesto o cargo ocupado.",
-                  "example" : "Jefe de Departamento"
+                  "example" : "Jefe de Departamento",
+                  "faker": "from_catalog:catTrabajos"
                 },
                 "fecha_ingreso" : {
-                  "$ref" : "#/components/schemas/fecha"
+                  "$ref" : "#/components/schemas/fecha",
+                  "faker": "date_time:birthday"
                 },
                 "fecha_salida" : {
-                  "$ref" : "#/components/schemas/fecha"
+                  "$ref" : "#/components/schemas/fecha",
+                  "faker": "date_time:birthday"
                 },
                 "funciones_principales" : {
-                  "$ref" : "#/components/schemas/funciones"
+                  "faker": "from_catalog:catFunciones"
+
                 }
               }
             }
@@ -779,8 +826,10 @@
           "dependientes_economicos" : {
             "description" : "Aquí se deberán proporcionar los datos del cónyuge, concubina o concubinario, pareja en sociedad de convivencia, así como de los dependientes económicos, que son aquellas personas, familiares o no, cuya manutención depende principalmente de los ingresos del Servidor Público Declarante, conforme a la legislación civil aplicable. Para llenar este rubro es necesario tener a la vista actas de nacimiento, CURP del cónyuge, concubina o concubinario y/o dependientes económicos, y cualquier otro documento necesario en el que se incluya la información.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
+              "faker": "fake_dependent",
               "properties" : {
                 "nombre_personal" : {
                   "description" : "Se deberá escribir el nombre o los nombres completos, así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido, deberá colocarse en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Este dato es información confidencial.",
@@ -812,6 +861,7 @@
                 "nacionalidades" : {
                   "description" : "Este dato es información confidencial",
                   "type" : "array",
+                  "faker": "in_range:1:5",
                   "items" : {
                     "type" : "object",
                     "properties" : {
@@ -992,6 +1042,7 @@
                 "beneficiario_programa_publico" : {
                   "description" : "Se deberá señalar si el cónyuge, concubina o concubino, así como de los dependientes económicos, son beneficiarios directos de algún programa público. Señalar el nombre del programa, la institución que otorga el apoyo, así como el tipo (subsidio, servicio, obra u otro - especificar) y valor del mismo.",
                   "type" : "array",
+                  "faker": "in_range:1:10",
                   "items" : {
                     "type" : "object",
                     "properties" : {
@@ -1029,6 +1080,7 @@
           "empresas_sociedades_asociaciones" : {
             "description" : "Se deberá llenar toda la información por cada uno de los supuestos en los que se les actualice el reporte de la información de cada subsección.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1038,38 +1090,46 @@
                 "nombre_empresa_sociedad_asociacion" : {
                   "type" : "string",
                   "description" : "Se deberá indicar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública, sobre la cual el funcionario en los últimos tres años. (i) Tiene o ha tenido un derecho patrimonial directo, o (ii) Es un propietario real (beneficiario final*), al tener 50% de los votos o más, la dirección de estrategia o 25% o más de las acciones, o (iii) Ha tenido una función de administración. *Persona física que ejerza control, entendido como la capacidad de imponer decisiones, nombrar o destituir a la mayoría de los consejeros o administradores, la tenencia de 50% de los votos o más, la dirección de la estrategia, o quien tenga 25% o más de las acciones.",
-                  "example" : "DataIQ"
+                  "example" : "DataIQ",
+                  "faker": "company"
                 },
                 "pais_registro" : {
                   "$ref" : "#/components/schemas/pais"
                 },
                 "fecha_constitucion" : {
-                  "$ref" : "#/components/schemas/fecha"
+                  "$ref" : "#/components/schemas/fecha",
+                  "faker": "date_time:birthday"
                 },
                 "numero_registro" : {
                   "type" : "string",
                   "description" : "El número de inscripción del instrumento en el que se haya dado fe de la constitución de la empresa, sociedad o asociación (por ejemplo: el número de inscripción de la escritura pública emitido ante fedatario público).",
-                  "example" : "ABC123"
+                  "example" : "ABC123",
+                  "faker": "id"
                 },
                 "rfc" : {
                   "$ref" : "#/components/schemas/rfc"
                 },
                 "domicilio" : {
-                  "$ref" : "#/components/schemas/domicilio"
+                  "$ref" : "#/components/schemas/domicilio",
+                  "faker": "fake_address"
                 },
                 "rol" : {
                   "type" : "string",
                   "description" : "Indicar cualquier tipo de situación que relacione al Declarante con el ente (por ejemplo: dueño, accionista, beneficiario final, etc.)",
-                  "example" : "Dueño"
+                  "example" : "Dueño",
+                  "faker": "from_catalog:catTrabajos"
                 },
                 "actividad_economica" : {
-                  "type" : "boolean"
+                  "type" : "boolean",
+                  "faker": "boolean"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "porcentaje_participacion" : {
-                  "$ref" : "#/components/schemas/porcentaje"
+                  "$ref" : "#/components/schemas/porcentaje",
+                  "faker": "int:70"
                 }
               }
             }
@@ -1077,6 +1137,7 @@
           "membresias" : {
             "description" : "Refiere a la condición de pertenencia formal del Declarante a alguna institución y por la que puede el Declarante pagar una suscripción.",
             "type" : "array",
+            "faker": "in_range:1:5",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1085,6 +1146,7 @@
                 },
                 "tipo_institucion" : {
                   "type" : "object",
+                  "faker": "from_catalog:catTipoInstitucion",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -1101,11 +1163,13 @@
                 "nombre_institucion" : {
                   "type" : "string",
                   "description" : "Deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada formalmente.",
-                  "example" : "Asociacion A.C"
+                  "example" : "Asociacion A.C",
+                  "faker": "company"
                 },
                 "naturaleza_membresia" : {
                   "description" : "Señalar si la membresía pertenece a un Consejo, Directorio, Junta, Asociación Civil, Fundación, organización benéfica, partido político, otro (especificar).",
                   "type" : "object",
+                  "faker": "from_catalog:catNaturalezaMembresia",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -1123,19 +1187,23 @@
                   "$ref" : "#/components/schemas/domicilio"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "puesto_rol" : {
                   "type" : "string",
                   "description" : "Indicar el cargo o función que ejerce el Declarante.",
-                  "example" : "Titular"
+                  "example" : "Titular",
+                  "faker": "from_catalog:catTrabajos"
                 },
                 "fecha_inicio" : {
-                  "$ref" : "#/components/schemas/fecha"
+                  "$ref" : "#/components/schemas/fecha",
+                  "faker": "date_time:birthday"
                 },
                 "pagado" : {
                   "type" : "boolean",
-                  "example" : true
+                  "example" : true,
+                  "faker": "boolean"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -1146,6 +1214,7 @@
           "apoyos_beneficios_publicos" : {
             "description" : "Es la contribución monetaria o en especie que ofrece una entidad pública al Declarante. El apoyo en especie refiere a cualquier contribución a una persona o entidad pública, privada o mixta, utilizando bienes, servicios o beneficios de cualquier naturaleza diferentes al dinero.",
             "type" : "array",
+            "faker": "in_range:1:5",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1154,29 +1223,34 @@
                 },
                 "es_beneficiario" : {
                   "type" : "boolean",
-                  "example" : true
+                  "example" : true,
+                  "faker": "boolean"
                 },
                 "programa" : {
                   "type" : "string",
                   "description" : "Señalar el nombre del programa del que es beneficiario el Declarante.",
-                  "example" : "Programa de Estímulos Económicos a Deportistas del Distrito Federal"
+                  "example" : "Programa de Estímulos Económicos a Deportistas del Distrito Federal",
+                  "faker": "from_catalog:catProgramas"
                 },
                 "institucion_otorgante" : {
                   "type" : "string",
                   "description" : "Señalar la institución encargada de brindar el apoyo en especie o monetario que se declara.",
-                  "example" : "Instituto del Deporte del Distrito Federal "
+                  "example" : "Instituto del Deporte del Distrito Federal ",
+                  "faker": "from_catalog:instituciones"
                 },
                 "nivel_orden_gobierno" : {
                   "$ref" : "#/components/schemas/nivel_orden_gobierno"
                 },
                 "tipo_apoyo" : {
-                  "$ref" : "#/components/schemas/tipo_apoyo"
+                  "$ref" : "#/components/schemas/tipo_apoyo",
+                  "faker": "from_catalog:catTipoApoyo"
                 },
                 "valor_anual_apoyo" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se señalará el monto en caso de que el apoyo sea monetario.",
-                  "example" : 7500
+                  "example" : 7500,
+                  "faker": "in_range:10000:50000"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -1187,6 +1261,7 @@
           "representacion_activa" : {
             "description" : "Se presenta cuando el Declarante actúa en nombre de otra persona física o moral, produciendo efectos patrimoniales y jurídicos, de conformidad con la legislación aplicable.",
             "type" : "array",
+            "faker": "in_range:1:5",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1194,39 +1269,47 @@
                   "$ref" : "#/components/schemas/id"
                 },
                 "tipo_representacion" : {
-                  "$ref" : "#/components/schemas/tipo_representacion"
+                  "$ref" : "#/components/schemas/tipo_representacion",
+                  "faker": "from_catalog:catTipoRepresentacion"
                 },
                 "nombre_parte_representada" : {
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial.",
-                  "example" : "Cecilia Gomez Urrutia"
+                  "example" : "Cecilia Gomez Urrutia",
+                  "faker": "full_name"
                 },
                 "curp_parte" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "rfc_parte" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial.",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "fecha_nacimiento_parte" : {
                   "type" : "string",
                   "format" : "date",
                   "description" : "Se deberá señalar la fecha de nacimiento de la parte representada en formato yyyy-mm-dd. Este dato es información confidencial.",
-                  "example" : "2010-07-26"
+                  "example" : "2010-07-26",
+                  "faker": "date_time:birthday"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "fecha_inicio" : {
-                  "$ref" : "#/components/schemas/fecha"
+                  "$ref" : "#/components/schemas/fecha",
+                  "faker": "date_time:birthday"
                 },
                 "pagado" : {
                   "description" : "Incluir si recibe o no una remuneración por su participación.",
-                  "type" : "boolean"
+                  "type" : "boolean",
+                  "faker": "boolean"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -1237,6 +1320,7 @@
           "representacion_pasiva" : {
             "description" : "Se presenta cuando una persona física actúa en nombre del Declarante, produciendo efectos patrimoniales y jurídicos, de conformidad con la legislación aplicable.",
             "type" : "array",
+            "faker": "in_range:1:5",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1244,22 +1328,27 @@
                   "$ref" : "#/components/schemas/id"
                 },
                 "tipo_representacion" : {
-                  "$ref" : "#/components/schemas/tipo_representacion"
+                  "$ref" : "#/components/schemas/tipo_representacion",
+                  "faker": "from_catalog:catTipoRepresentacion"
                 },
                 "nombre" : {
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública.",
-                  "example" : "Augusto Fernandez Castro"
+                  "example" : "Augusto Fernandez Castro",
+                  "faker": "full_name"
                 },
                 "fecha_inicio_representacion" : {
-                  "$ref" : "#/components/schemas/fecha"
+                  "$ref" : "#/components/schemas/fecha",
+                  "faker": "date_time:birthday"
                 },
                 "nacionalidades" : {
                   "description" : "Se deberá señalar las nacionalidades del representante. Este dato es información confidencial.",
                   "type" : "array",
+                  "faker": "in_range:1:5",
                   "items" : {
                     "type" : "object",
+                    "faker": "from_catalog:paises",
                     "properties" : {
                       "valor" : {
                         "type" : "string",
@@ -1278,29 +1367,35 @@
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial.",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "fecha_nacimiento" : {
                   "type" : "string",
                   "format" : "date",
                   "description" : "Se deberá señalar la fecha de nacimiento de la parte representada en formato yyyy-mm-dd. Este dato es información confidencial.",
-                  "example" : "2010-07-26"
+                  "example" : "2010-07-26",
+                  "faker": "date_time:birthday"
                 },
                 "tiene_intereses" : {
-                  "type" : "boolean"
+                  "type" : "boolean",
+                  "faker": "boolean"
                 },
                 "ocupacion_profesion" : {
                   "type" : "string",
                   "description" : "Deberá señalar la actividad económica/profesional/técnica preponderante que ejerza el/la representada o bien el nombre de la carrera o de los estudios realizados.",
-                  "example" : "Contador"
+                  "example" : "Contador",
+                  "faker": "job"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -1311,6 +1406,7 @@
           "socios_comerciales" : {
             "description" : "Esta Categoría no incluye a las sociedades que cotizan en mercados de valores. Sólo declarar a aquellos socios que controlan más del 20% de aquellas sociedades en las que el Titular controla más del 20%.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1320,36 +1416,43 @@
                 "nombre_actividad" : {
                   "type" : "string",
                   "description" : "Se deberá señalar el giro comercial por medio de la cual existe una sociedad comercial del Declarante con un tercero.",
-                  "example" : "Actividad"
+                  "example" : "Actividad",
+                  "faker": "from_catalog:catTipoActividadServicio"
                 },
                 "tipo_vinculo" : {
                   "type" : "string",
                   "description" : "Se deberá precisar la naturaleza del vínculo comercial que el Declarante tiene con su socio comercial.",
-                  "example" : "Socio"
+                  "example" : "Socio",
+                  "faker": "custom_string:Socio"
                 },
                 "antiguedad_vinculo" : {
                   "type" : "number",
                   "description" : "Se deberá señalar el tiempo (en años) del vínculo comercial que el Declarante tiene con su socio comercial.",
-                  "example" : 20
+                  "example" : 20,
+                  "faker": "in_range:1:50"
                 },
                 "rfc_entidad" : {
-                  "$ref" : "#/components/schemas/rfc"
+                  "$ref" : "#/components/schemas/rfc",
+                  "faker": "rfc"
                 },
                 "nombre" : {
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. En caso de ser persona física el socio comercial, deberá proporcionar el nombre, primer y segundo apellidos; si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial.",
-                  "example" : "Armando Rodriguez Saes"
+                  "example" : "Armando Rodriguez Saes",
+                  "faker": "full_name"
                 },
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial.",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "lugar_nacimiento" : {
                   "$ref" : "#/components/schemas/lugar_registro"
@@ -1358,17 +1461,20 @@
                   "type" : "string",
                   "format" : "date",
                   "description" : "Se deberá señalar la fecha de nacimiento de la parte representada en formato yyyy-mm-dd. Este dato es información confidencial.",
-                  "example" : "2010-07-26"
+                  "example" : "2010-07-26",
+                  "faker": "date_time:birthday"
                 },
                 "porcentaje_participacion" : {
                   "type" : "number",
                   "minimum" : 1,
                   "maximum" : 100,
                   "description" : "Valor númerico porcentual. Este dato es información confidencial.",
-                  "example" : 70
+                  "example" : 70,
+                  "faker": "in_range:1:100"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -1379,6 +1485,7 @@
           "clientes_principales" : {
             "description" : "Son los clientes del Declarante en uno o varios negocios o actividades lucrativas, propias o a través de personas morales, que representan el 25% o más de los ingresos netos de(l) (los) negocio(s). Se listan los clientes que no estén amparados por secreto profesional en la actividad lucrativa respectiva. Sólo declarar a los clientes principales de aquellas empresas en las cuales el titular tiene el control.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1388,32 +1495,38 @@
                 "nombre_negocio" : {
                   "type" : "string",
                   "description" : "Se deberá proporcionar el nombre, la denominación o razón social del negocio, tal y como se encuentra registrada en escritura pública (si es persona moral).",
-                  "example" : "Nombre negocio"
+                  "example" : "Nombre negocio",
+                  "faker": "company"
                 },
                 "numero_registro" : {
                   "type" : "string",
                   "description" : "En caso de que corresponda se deberá señalar el dato que identifique el negocio o actividad lucrativa.",
-                  "example" : "HTC896DSFA"
+                  "example" : "HTC896DSFA",
+                  "faker": "rfc"
                 },
                 "dueno_encargado" : {
                   "type" : "string",
                   "description" : "En caso de que corresponda deberá señalar la persona que funja como dueño o encargado del negocio o actividad lucrativa. Este dato es información confidencial.",
-                  "example" : "Salvador Hernández Torres"
+                  "example" : "Salvador Hernández Torres",
+                  "faker": "full_name"
                 },
                 "nombre" : {
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial.",
-                  "example" : "AMEX S A"
+                  "example" : "AMEX S A",
+                  "faker": "company:clean"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial.",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "domicilio" : {
                   "description" : "Este dato es información confidencial",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -1505,14 +1618,16 @@
                   }
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "porcentaje_participacion" : {
                   "type" : "number",
                   "minimum" : 1,
                   "maximum" : 100,
                   "description" : "Valor numérico porcentual. Este dato es información confidencial.",
-                  "example" : 70
+                  "example" : 70,
+                  "faker": "in_range:1:100"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -1523,6 +1638,7 @@
           "otras_partes" : {
             "description" : "Se refiere a otras relaciones de asociación del Declarante que podrían generar un interés.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1551,16 +1667,20 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial.",
-                  "example" : "Sergio Rodriguez"
+                  "example" : "Sergio Rodriguez",
+                  "faker": "company:clean"
                 },
                 "fecha_inicio_relacion" : {
-                  "$ref" : "#/components/schemas/fecha"
+                  "$ref" : "#/components/schemas/fecha",
+                  "faker": "date_time:birthday"
                 },
                 "nacionalidades" : {
                   "description" : "Este dato es información confidencial.",
                   "type" : "array",
+                  "faker": "in_range:1:5",
                   "items" : {
                     "type" : "object",
+                    "faker": "from_catalog:paises",
                     "properties" : {
                       "valor" : {
                         "type" : "string",
@@ -1579,29 +1699,35 @@
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial.",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "fecha_nacimiento" : {
                   "type" : "string",
                   "format" : "date",
                   "description" : "Se deberá señalar la fecha de nacimiento de la parte representada en formato yyyy-mm-dd. Este dato es información confidencial.",
-                  "example" : "2010-07-26"
+                  "example" : "2010-07-26",
+                  "faker": "date_time:birthday"
                 },
                 "ocupacion" : {
                   "type" : "string",
                   "description" : "Deberá señalar la actividad económica/ profesional/técnica preponderante que ejerza el/la representada o bien el nombre de la carrera o de los estudios realizados.",
-                  "example" : "Administrador de empresas"
+                  "example" : "Administrador de empresas",
+                  "faker": "job"
                 },
                 "tiene_interes" : {
-                  "type" : "boolean"
+                  "type" : "boolean",
+                  "faker": "boolean"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -1612,6 +1738,7 @@
           "beneficios_gratuitos" : {
             "description" : "El Declarante reportará los beneficios presentes, donaciones, regalos o similares diferentes a efectivo y bienes que implican el goce de algún bien, la prestación de algún servicio o similar cuyo monto de su valor comercial sea mayor a 62 Unidades de Medición y Actualización (UMA). Se deberá llenar la información por cada uno de los beneficios que se reporte.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1621,21 +1748,25 @@
                 "tipo_beneficio" : {
                   "description" : "Se deberá escribir la naturaleza del beneficio (viajes patrocinados, servicios recibidos, asistencia, descuentos recibidos, puntos de lealtad, millas u otros tales como tarjetas o monederos electrónicos que no impliquen recursos en efectivo, etc.).",
                   "type" : "string",
-                  "example" : "Tarjetas o monederos electrónicos"
+                  "example" : "Tarjetas o monederos electrónicos",
+                  "faker": "custom_string:Tarjetas o monederos electrónicos"
                 },
                 "origen_beneficio" : {
                   "type" : "string",
                   "description" : "Se deberá proporcionar el nombre, denominación o razón social de la persona física o moral de la cual se recibe/goza el beneficio. Este dato es información confidencial.",
-                  "example" : "Prestación laboral"
+                  "example" : "Prestación laboral",
+                  "faker": "custom_string:Prestación laboral"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "valor_beneficio" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá señalar el monto del beneficio en pesos, o en caso de estar imposibilitado para conocer la exactitud del monto, indicar uno aproximado.",
-                  "example" : 1256
+                  "example" : 1256,
+                  "faker": "in_range:1:1000000"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -1652,6 +1783,7 @@
           "sueldos_salarios_publicos" : {
             "description" : "El Declarante deberá proporcionar la información relativa al encargo o encargos con los que cuenta. Las áreas de recursos humanos u homólogas de las entidades públicas, se coordinarán con las Secretarías y Órganos Internos de Control para garantizar que los datos de este apartado están previamente cargados y que coincidan exactamente con aquellos con los que se cuenten en sus registros.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1661,6 +1793,7 @@
                 "ente_publico" : {
                   "description" : "Se deberá indicar el Ente Público o entidad que realiza el pago de sueldos y salarios al Declarante.",
                   "type" : "object",
+                  "faker": "from_catalog:catEntePublico",
                   "properties" : {
                     "valor" : {
                       "type" : "string",
@@ -1689,6 +1822,7 @@
           "sueldos_salarios_otros_empleos" : {
             "description" : "Ingresos obtenidos como remuneración de parte de un empleador diferente al del (los) empleos, cargos o comisiones pública reportados en la sección anterior.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1699,32 +1833,39 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Indicar el nombre, denominación o razón social de la persona física o moral de la que se recibe el ingreso. Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Max Power Inc"
+                  "example" : "Max Power Inc",
+                  "faker": "company:clean"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "$ref" : "#/components/schemas/rfc"
                 },
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial.",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "tipo_actividad_servicio" : {
-                  "$ref" : "#/components/schemas/tipo_actividad_servicio"
+                  "$ref" : "#/components/schemas/tipo_actividad_servicio",
+                  "faker": "from_catalog:catTipoActividadServicio"
                 },
                 "descripcion_actividad_servicio" : {
                   "type" : "string",
                   "description" : "Deberá brindar una descripción breve de la actividad por la que recibe ingreso el Declarante.",
-                  "example" : "Servicio profesional de TI"
+                  "example" : "Servicio profesional de TI",
+                  "faker": "lorem_text"
                 },
                 "domicilio_persona_paga" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -1827,6 +1968,7 @@
           "actividad_profesional" : {
             "description" : "Actividades del Declarante relacionadas con el ejercicio de una profesión. Se deberá reportar la información de todas las actividades profesionales que generaron un ingreso.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1837,32 +1979,39 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Indicar el nombre, denominación o razón social de la persona física o moral de la que se recibe el ingreso. Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Nombre"
+                  "example" : "Nombre",
+                  "faker": "company:clean"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "tipo_actividad_servicio" : {
-                  "$ref" : "#/components/schemas/tipo_actividad_servicio"
+                  "$ref" : "#/components/schemas/tipo_actividad_servicio",
+                  "faker": "from_catalog:catTipoActividadServicio"
                 },
                 "descripcion_actividad_servicio" : {
                   "type" : "string",
                   "description" : "Se deberá brindar una descripción breve de la actividad por la que recibe ingreso el Declarante.",
-                  "example" : "Descripción del servicio"
+                  "example" : "Descripción del servicio",
+                  "faker": "lorem_text"
                 },
                 "domicilio_persona_paga" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -1965,6 +2114,7 @@
           "actividad_empresarial" : {
             "description" : "El Declarante reportará los ingresos que reciba por su actividad económica o comercial. ",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -1975,32 +2125,40 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá indicar el nombre, denominación o razón social de la persona física o moral de la que se recibe el ingreso. Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Empresa S A"
+                  "example" : "Empresa S A",
+                  "faker": "company:clean"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial.",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
+
                 },
                 "tipo_actividad_servicio" : {
-                  "$ref" : "#/components/schemas/tipo_actividad_servicio"
+                  "$ref" : "#/components/schemas/tipo_actividad_servicio",
+                  "faker": "from_catalog:catTipoActividadServicio"
                 },
                 "descripcion_actividad_servicio" : {
                   "type" : "string",
                   "description" : "Deberá brindar una descripción breve de la actividad por la que recibe ingreso el Declarante.",
-                  "example" : "Descripción del servicio"
+                  "example" : "Descripción del servicio",
+                  "faker": "lorem_text"
                 },
                 "domicilio_actividad_empresarial" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -2083,6 +2241,7 @@
           "actividad_economica_menor" : {
             "description" : "Ingreso por actividades del Declarante por circunstancias diferentes a alguna de las categorías diferentes a las anteriores.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -2093,32 +2252,39 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Indicar el nombre, denominación o razón social o situación de la persona física o moral de la que se recibe el ingreso. Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Nombre"
+                  "example" : "Nombre",
+                  "faker": "company:clean"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial.",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "tipo_actividad_servicio" : {
-                  "$ref" : "#/components/schemas/tipo_actividad_servicio"
+                  "$ref" : "#/components/schemas/tipo_actividad_servicio",
+                  "faker": "from_catalog:catTipoActividadServicio"
                 },
                 "descripcion_actividad_servicio" : {
                   "type" : "string",
                   "description" : "Se deberá brindar una descripción breve de la actividad por la que recibe ingreso el Declarante.",
-                  "example" : "Descripción del servicio"
+                  "example" : "Descripción del servicio",
+                  "faker": "lorem_text"
                 },
                 "domicilio_actividad" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -2220,6 +2386,7 @@
           "arrendamiento" : {
             "description" : "Se declarará el ingreso recibido como contraprestación por el arrendamiento, subarrendamiento o una figura análoga de conformidad con la normatividad civil o mercantil aplicable.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -2230,32 +2397,39 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá indicar el nombre, denominación o razón social de la persona física o moral de la que se recibe el ingreso. Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "ABC Inc"
+                  "example" : "ABC Inc",
+                  "faker": "company:clean"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "tipo_actividad_servicio" : {
-                  "$ref" : "#/components/schemas/tipo_actividad_servicio"
+                  "$ref" : "#/components/schemas/tipo_actividad_servicio",
+                  "faker": "from_catalog:catTipoActividadServicio"
                 },
                 "descripcion_actividad_servicio" : {
                   "type" : "string",
                   "description" : "Deberá brindar una descripción breve del tipo de arrendamiento por el que recibe ingreso el Declarante.",
-                  "example" : "Descripción del servicio"
+                  "example" : "Descripción del servicio",
+                  "faker": "lorem_text"
                 },
                 "domicilio_actividad" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -2357,6 +2531,7 @@
           "intereses" : {
             "description" : "El Declarante señalará los ingresos obtenidos como rendimiento financiero de una inversión.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -2367,32 +2542,39 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Indicar el nombre, denominación o razón social de la persona física o moral de la que se recibe el ingreso. Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "BANC"
+                  "example" : "BANC",
+                  "faker": "company:clean"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "tipo_actividad_servicio" : {
-                  "$ref" : "#/components/schemas/tipo_actividad_servicio"
+                  "$ref" : "#/components/schemas/tipo_actividad_servicio",
+                  "faker": "from_catalog:catTipoActividadServicio"
                 },
                 "descripcion_actividad_servicio" : {
                   "type" : "string",
                   "description" : "Deberá brindar una descripción breve de la inversión por la que recibe ingreso el Declarante.",
-                  "example" : "Descripción del servicio"
+                  "example" : "Descripción del servicio",
+                  "faker": "lorem_text"
                 },
                 "domicilio" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -2493,6 +2675,7 @@
           },
           "premios" : {
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -2503,32 +2686,39 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Indicar el nombre, denominación o razón social de la persona física o moral de la que se recibe el ingreso. Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Loteria Nacional"
+                  "example" : "Loteria Nacional",
+                  "faker": "company:clean"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "tipo_actividad_servicio" : {
-                  "$ref" : "#/components/schemas/tipo_actividad_servicio"
+                  "$ref" : "#/components/schemas/tipo_actividad_servicio",
+                  "faker": "from_catalog:catTipoActividadServicio"
                 },
                 "descripcion_premio" : {
                   "type" : "string",
                   "description" : "Deberá brindar una descripción breve del tipo de premio por el que recibe ingreso el Declarante.",
-                  "example" : "Descripción del servicio"
+                  "example" : "Descripción del servicio",
+                  "faker": "lorem_text"
                 },
                 "domicilio" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -2630,6 +2820,7 @@
           "enajenacion_bienes" : {
             "description" : "El Declarante reportará cualquier ingreso que reciba por la enajenación o cualquier acto jurídico similar de un bien de su propiedad conforme a la normatividad aplicable.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -2640,20 +2831,24 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá indicar el nombre, denominación o razón social de la persona física o moral de la que se recibe el ingreso. Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Loteria Nacional"
+                  "example" : "Loteria Nacional",
+                  "faker": "company:clean"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "tipo_bien" : {
                   "type" : "object",
+                  "faker": "from_catalog:catTipoBien",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -2669,19 +2864,23 @@
                   }
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "tipo_actividad_servicio" : {
-                  "$ref" : "#/components/schemas/tipo_actividad_servicio"
+                  "$ref" : "#/components/schemas/tipo_actividad_servicio",
+                  "faker": "from_catalog:catTipoActividadServicio"
                 },
                 "descripcion_bien" : {
                   "type" : "string",
                   "description" : "Deberá brindar una descripción breve del bien por el que recibe ingreso el Declarante.",
-                  "example" : "Descripción del servicio"
+                  "example" : "Descripción del servicio",
+                  "faker": "lorem_text"
                 },
                 "domicilio_bien_enajenado" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -2783,6 +2982,7 @@
           "otros_ingresos" : {
             "description" : "Se refiere a cualquier ingreso recibido que no esté considerado en las clasificaciones anteriores.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -2793,32 +2993,39 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Indicar el nombre, denominación, razón social de la persona física o moral o de la situación de la que se recibe el ingreso. Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Centro Educativo"
+                  "example" : "Centro Educativo",
+                  "faker": "company:clean"
                 },
                 "rfc" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "curp" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "sector_industria" : {
-                  "$ref" : "#/components/schemas/sector_industria"
+                  "$ref" : "#/components/schemas/sector_industria",
+                  "faker": "from_catalog:sectorIndustrial"
                 },
                 "tipo_actividad" : {
-                  "$ref" : "#/components/schemas/tipo_actividad_servicio"
+                  "$ref" : "#/components/schemas/tipo_actividad_servicio",
+                  "faker": "from_catalog:catTipoActividadServicio"
                 },
                 "descripcion_actividad" : {
                   "type" : "string",
                   "description" : "Deberá brindar una descripción breve de la actividad por la que recibe ingreso el Declarante.",
-                  "example" : "Descripción del servicio"
+                  "example" : "Descripción del servicio",
+                  "faker": "lorem_text"
                 },
                 "domicilio_actividad" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -2926,6 +3133,7 @@
           "bienes_inmuebles" : {
             "description" : "El Declarante reportará aquellos bienes que conforme a la normatividad civil se consideran como inmuebles. Son propiedades o bienes que no pueden moverse del lugar en el que se encuentran.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -2937,6 +3145,7 @@
                 },
                 "tipo_bien" : {
                   "type" : "object",
+                  "faker": "from_catalog:catTipoBienInmueble",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -2955,13 +3164,15 @@
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá señalar en metros cuadrados la superficie total correspondiente al terreno respecto del bien inmueble que se declare.",
-                  "example" : 300
+                  "example" : 300,
+                  "faker": "in_range:300:600"
                 },
                 "superficie_construccion" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá señalar en metros cuadrados con valor numérico la superficie correspondiente a construcción respecto del bien inmueble que se declare.",
-                  "example" : 100
+                  "example" : 100,
+                  "faker": "in_range:100:300"
                 },
                 "titular" : {
                   "$ref" : "#/components/schemas/titular_bien"
@@ -2977,19 +3188,22 @@
                       "type" : "string",
                       "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                       "description" : "Nombres o nombre de la persona. Este dato es información confidencial.",
-                      "example" : "Carlos"
+                      "example" : "Carlos",
+                      "faker": "first_name"
                     },
                     "primer_apellido" : {
                       "type" : "string",
                       "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                       "description" : "Primer apellido de la persona. Este dato es información confidencial.",
-                      "example" : "Perez"
+                      "example" : "Perez",
+                      "faker": "last_name"
                     },
                     "segundo_apellido" : {
                       "type" : "string",
                       "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                       "description" : "Segundo apellido de la persona. Este dato es información confidencial.",
-                      "example" : "Sanchez"
+                      "example" : "Sanchez",
+                      "faker": "last_name"
                     }
                   }
                 },
@@ -3001,17 +3215,20 @@
                       "description" : "Este dato es información confidencial.",
                       "type" : "integer",
                       "minimum" : 1,
-                      "example" : 202020
+                      "example" : 202020,
+                      "faker": "in_range:1:10000000"
                     },
                     "numero_registro_publico" : {
                       "description" : "Este dato es información confidencial.",
                       "type" : "integer",
                       "minimum" : 1,
-                      "example" : 404040
+                      "example" : 404040,
+                      "faker": "in_range:1:10000000"
                     },
                     "folio_real" : {
                       "type" : "string",
-                      "example" : "jsjs74747"
+                      "example" : "jsjs74747",
+                      "faker": "id"
                     },
                     "fecha_contrato" : {
                       "$ref" : "#/components/schemas/fecha"
@@ -3021,6 +3238,7 @@
                 "domicilio_bien" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -3117,17 +3335,20 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Monster Inc"
+                  "example" : "Monster Inc",
+                  "faker": "company:clean"
                 },
                 "rfc_quien_adquirio" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "curp_quien_adquirio" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "relacion_persona_adquirio" : {
                   "$ref" : "#/components/schemas/relacion_con_persona2"
@@ -3145,7 +3366,8 @@
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Deberá señalar el monto y la moneda de compraventa según la escritura o contrato privado.",
-                  "example" : 800
+                  "example" : 800,
+                  "faker": "in_range:1:10000"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -3156,6 +3378,7 @@
           "bienes_muebles_registrables" : {
             "description" : "El Declarante informará aquellos bienes que conforme a la normatividad civil se consideran muebles, son de su propiedad y que de acuerdo con su naturaleza requieren un tipo de registro, anotación, identificación de su propietario o similar. En el llenado de esta información, deberá contar con la tarjeta de circulación, con factura del (os) vehículo(s) automotor(es), aeronaves o embarcaciones, o de cualquier otro tipo, y en su caso, de la carta responsiva. El dato de \"tipo\", también aparece en la tarjeta de circulación o factura como submarca o línea.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -3171,22 +3394,26 @@
                 "marca" : {
                   "type" : "string",
                   "description" : "Se deberá señalar la marca del bien mueble declarado.",
-                  "example" : "NISSAN"
+                  "example" : "NISSAN",
+                  "faker": "custom_string:NISSAN"
                 },
                 "submarca" : {
                   "type" : "string",
                   "description" : "Se deberá proporcionar el tipo del bien mueble que se declare.",
-                  "example" : "RS-122234"
+                  "example" : "RS-122234",
+                  "faker": "id"
                 },
                 "modelo" : {
                   "type" : "number",
                   "description" : "Se deberá indicar el año del modelo.",
-                  "example" : 2018
+                  "example" : 2018,
+                  "faker": "year:int"
                 },
                 "numero_serie" : {
                   "type" : "string",
                   "description" : "Se deberá proporcionar el número de serie del bien mueble. Este dato es información confidencial.",
-                  "example" : "6545243-4334"
+                  "example" : "6545243-4334",
+                  "faker": "id"
                 },
                 "lugar_registro" : {
                   "description" : "Este dato es información confidencial.",
@@ -3208,18 +3435,21 @@
                 },
                 "nombres_copropietarios" : {
                   "type" : "array",
+                  "faker": "in_range:1:10",
                   "items" : {
                     "type" : "string",
                     "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                     "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial.",
-                    "example" : "Monstr Inc"
+                    "example" : "Monstr Inc",
+                    "faker": "company:clean"
                   }
                 },
                 "numero_registro_vehicular" : {
                   "type" : "integer",
                   "minimum" : 1,
                   "description" : "Se deberá señalar el número de registro vehicular ante el Registro Público Vehicular. Este dato es información confidencial.",
-                  "example" : 455000
+                  "example" : 455000,
+                  "faker": "in_range:1:100000"
                 },
                 "forma_adquisicion" : {
                   "$ref" : "#/components/schemas/forma_adquisicion"
@@ -3228,12 +3458,14 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Monstr Inc"
+                  "example" : "Monstr Inc",
+                  "faker": "company:clean"
                 },
                 "rfc_quien_adquirio" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "relacion_persona_quien_adquirio" : {
                   "$ref" : "#/components/schemas/relacion_con_persona2"
@@ -3256,6 +3488,7 @@
           "bienes_muebles_no_registrables" : {
             "description" : "Se refiere a la información que el Declarante reportará sobre bienes que conforme a la normatividad civil se consideran muebles que, por su naturaleza, de manera individual o en conjunto representan una parte considerable del patrimonio del Servidor Público de acuerdo con su condición socioeconómica y que para efectos de referencia el monto de su valor comercial sea mayor a 1200 Unidades de Medición y Actualización (UMA).",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -3271,7 +3504,8 @@
                 "descripcion" : {
                   "type" : "string",
                   "description" : "Deberá brindar una descripción breve del bien por el que recibe ingreso el Declarante.",
-                  "example" : "Con descripción"
+                  "example" : "Con descripción",
+                  "$ref" : "#/components/schemas/observaciones"
                 },
                 "titular_bien" : {
                   "$ref" : "#/components/schemas/titular_bien"
@@ -3281,15 +3515,18 @@
                   "minimum" : 1,
                   "maximum" : 100,
                   "description" : "Valor numérico porcentual. Este dato es información confidencial.",
-                  "example" : 70
+                  "example" : 70,
+                  "$ref" : "#/components/schemas/porcentaje"
                 },
                 "nombres_copropietarios" : {
                   "type" : "array",
+                  "faker": "in_range:1:10",
                   "items" : {
                     "type" : "string",
                     "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                     "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. En caso de ser persona física el socio comercial, deberá proporcionar el nombre, primer y segundo apellidos; si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial.",
-                    "example" : "Monstr Incorporation"
+                    "example" : "Monstr Incorporation",
+                    "faker": "company:clean"
                   }
                 },
                 "forma_adquisicion" : {
@@ -3299,7 +3536,8 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).  ",
-                  "example" : "Tesl Mtr Inc"
+                  "example" : "Tesl Mtr Inc",
+                  "faker": "company:clean"
                 },
                 "relacion_quien_adquirio" : {
                   "$ref" : "#/components/schemas/relacion_con_persona2"
@@ -3319,6 +3557,7 @@
           "inversiones_cuentas_valores" : {
             "description" : "El Declarante reportará toda la información relacionada con cualquier instrumento financiero en el cual se reporte cualquier tipo de representación de su patrimonio.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -3331,6 +3570,7 @@
                 "tipo_inversion" : {
                   "description" : "Se deberá reportar el tipo de inversión conforme a la normatividad aplicable (inversión, valores, cuenta, u otro - especificar).",
                   "type" : "object",
+                  "faker": "from_catalog:catTipoInversion",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -3346,6 +3586,7 @@
                 },
                 "tipo_especifico_inversion" : {
                   "type" : "object",
+                  "faker": "from_catalog:catTipoEspecificoInversion",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -3362,7 +3603,8 @@
                 "numero_cuenta" : {
                   "type" : "string",
                   "description" : "Señalar el número de cuenta, contrato o cualquier dato que permita la identificación de la cuenta, inversión o valor que se declare. Este dato es información confidencial.",
-                  "example" : "GFHRTY788778"
+                  "example" : "GFHRTY788778",
+                  "faker": "bban"
                 },
                 "nacional_extranjero" : {
                   "$ref" : "#/components/schemas/pais"
@@ -3370,12 +3612,14 @@
                 "nombre_institucion" : {
                   "type" : "string",
                   "description" : "Indicar el nombre de la institución donde se encuentren registradas las inversiones, cuentas o valores.",
-                  "example" : "Bank Inkc"
+                  "example" : "Bank Inkc",
+                  "faker": "company"
                 },
                 "rfc_institucion" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial.",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "sector_industria" : {
                   "$ref" : "#/components/schemas/sector_industria"
@@ -3383,6 +3627,7 @@
                 "domicilio_institucion" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -3479,13 +3724,15 @@
                   "type" : "string",
                   "format" : "date",
                   "description" : "Formato de fechas ISO 8601 con notación yyyy-mm-dd. Este dato es información confidencial.",
-                  "example" : "2010-07-26"
+                  "example" : "2010-07-26",
+                  "faker": "date_time:birthday"
                 },
                 "monto_original" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá señalar la cantidad con la que inicialmente el Declarante participó en la inversión. Este dato es información confidencial.",
-                  "example" : 80000
+                  "example" : 80000,
+                  "faker": "in_range:1:100000"
                 },
                 "tipo_moneda" : {
                   "$ref" : "#/components/schemas/moneda"
@@ -3494,23 +3741,27 @@
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Especificar la tasa de interés convenida por el Declarante y la institución financiera estipulada en el convenio inicial.",
-                  "example" : 10
+                  "example" : 10,
+                  "faker": "in_range:1:80"
                 },
                 "saldo_anual" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Señalar el saldo total con que cuenta la inversión/valor al 31 de diciembre del año inmediato anterior. Este dato es información confidencial.",
-                  "example" : 5000
+                  "example" : 5000,
+                  "faker": "in_range:1:10000"
                 },
                 "plazo" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá indicar la cantidad de tiempo (días, meses, años) en la cual se convino la inversión/valor. Este dato es información confidencial.",
-                  "example" : 6
+                  "example" : 6,
+                  "faker": "in_range:1:10"
                 },
                 "unidad_medida_plazo" : {
                   "description" : "Este dato es información confidencial.",
                   "type" : "object",
+                  "faker": "from_catalog:catUnidadMedidaPlazo",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -3541,6 +3792,7 @@
           "efectivo_metales" : {
             "description" : "El Declarante informará la propiedad que tenga de efectivo y/o metales de forma física o virtual a la normatividad aplicable.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -3557,10 +3809,12 @@
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Señalar la cantidad total que representa la posesión del tipo de moneda en efectivo (pesos). Este dato es información confidencial.",
-                  "example" : 78555
+                  "example" : 78555,
+                  "faker": "in_range:1:1000000"
                 },
                 "tipo_metal" : {
                   "type" : "object",
+                  "faker": "from_catalog:catTipoMetal",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -3576,13 +3830,15 @@
                 "unidades" : {
                   "type" : "number",
                   "description" : "Se deberá señalar el número de unidades de metal con las que cuenta.",
-                  "example" : 100
+                  "example" : 100,
+                  "faker": "in_range:1:1000"
                 },
                 "monto_metal" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá señalar el monto económico total en pesos que representa el metal en posesión del Declarante. Este dato es información confidencial.",
-                  "example" : 78555
+                  "example" : 78555,
+                  "faker": "in_range:1:1000000"
                 },
                 "forma_adquisicion" : {
                   "$ref" : "#/components/schemas/forma_adquisicion"
@@ -3596,6 +3852,7 @@
           "fideicomisos" : {
             "description" : "El Declarante informará los datos relacionados con los fideicomisos de los que forme parte y generan ingresos en su patrimonio conforme a la normatividad aplicable.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -3608,10 +3865,12 @@
                 "identificador_fideicomiso" : {
                   "type" : "string",
                   "description" : "Indicar el dato por medio del cual se identifique o haga identificable el fideicomiso.",
-                  "example" : "93232"
+                  "example" : "93232",
+                  "faker": "id"
                 },
                 "tipo_fideicomiso" : {
                   "type" : "object",
+                  "faker": "from_catalog:catTipoFideicomiso",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -3628,12 +3887,14 @@
                 "objetivo" : {
                   "type" : "string",
                   "description" : "Señalará el objeto de creación del fideicomiso conforme al instrumento jurídico correspondiente.",
-                  "example" : "Objetivo del fideicomiso"
+                  "example" : "Objetivo del fideicomiso",
+                  "faker": "lorem_text"
                 },
                 "numero_registro" : {
                   "type" : "string",
                   "description" : "Indicar el dato a través del cual se haga identificable el fideicomiso conforme a la normatividad aplicable. Este dato es información confidencial.",
-                  "example" : "788544abc"
+                  "example" : "788544abc",
+                  "faker": "id"
                 },
                 "fecha_creacion" : {
                   "$ref" : "#/components/schemas/fecha"
@@ -3648,7 +3909,8 @@
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Señalar el valor total del fideicomiso que se declara en caso de ser aplicable su valuación. Este dato es información confidencial.",
-                  "example" : 78555555
+                  "example" : 78555555,
+                  "faker": "in_range:1:10000000"
                 },
                 "moneda" : {
                   "$ref" : "#/components/schemas/moneda"
@@ -3660,12 +3922,14 @@
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Indicar el monto total que obtiene el Declarante a través del fideicomiso.",
-                  "example" : 56666
+                  "example" : 56666,
+                  "faker": "in_range:1:10000"
                 },
                 "institucion_fiduciaria" : {
                   "type" : "string",
                   "description" : "Indicar el nombre de la institución fiduciaria encargada de la administración de los bienes, valores y/o derechos fideicomitidos.",
-                  "example" : "Banco de México"
+                  "example" : "Banco de México",
+                  "faker": "company"
                 },
                 "fideicomitente" : {
                   "type" : "object",
@@ -3674,21 +3938,25 @@
                       "type" : "string",
                       "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                       "description" : "Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. En caso de ser persona física el socio comercial, deberá proporcionar el nombre, primer y segundo apellidos; si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial.",
-                      "example" : "Banco Robmen1"
+                      "example" : "Banco Robmen1",
+                      "faker": "company:clean"
                     },
                     "rfc" : {
                       "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                       "type" : "string",
-                      "example" : "GOAP780710RH7"
+                      "example" : "GOAP780710RH7",
+                      "faker": "rfc"
                     },
                     "curp" : {
                       "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial (si es persona física)",
                       "type" : "string",
-                      "example" : "BEML920313HMCLNS09"
+                      "example" : "BEML920313HMCLNS09",
+                      "faker": "curp"
                     },
                     "domicilio" : {
                       "description" : "Este dato es información confidencial (si es persona física).",
                       "type" : "object",
+                      "faker": "fake_address",
                       "properties" : {
                         "pais" : {
                           "$ref" : "#/components/schemas/pais"
@@ -3782,7 +4050,8 @@
                       "type" : "string",
                       "format" : "date",
                       "description" : "Formato de fechas ISO 8601 con notación yyyy-mm-dd. Este dato es información confidencial.",
-                      "example" : "2010-07-26"
+                      "example" : "2010-07-26",
+                      "faker": "date_time:birthday"
                     }
                   }
                 },
@@ -3793,21 +4062,25 @@
                       "type" : "string",
                       "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                       "description" : "Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. En caso de ser persona física el socio comercial, deberá proporcionar el nombre, primer y segundo apellidos; si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial.",
-                      "example" : "Banco Robmen1"
+                      "example" : "Banco Robmen1",
+                      "faker": "company:clean"
                     },
                     "rfc" : {
                       "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                       "type" : "string",
-                      "example" : "GOAP780710RH7"
+                      "example" : "GOAP780710RH7",
+                      "faker": "rfc"
                     },
                     "curp" : {
                       "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial (si es persona física)",
                       "type" : "string",
-                      "example" : "BEML920313HMCLNS09"
+                      "example" : "BEML920313HMCLNS09",
+                      "faker": "curp"
                     },
                     "domicilio" : {
                       "description" : "Este dato es información confidencial (si es persona física).",
                       "type" : "object",
+                      "faker": "fake_address",
                       "properties" : {
                         "pais" : {
                           "$ref" : "#/components/schemas/pais"
@@ -3901,7 +4174,8 @@
                       "type" : "string",
                       "format" : "date",
                       "description" : "Formato de fechas ISO 8601 con notación yyyy-mm-dd. Este dato es información confidencial.",
-                      "example" : "2010-07-26"
+                      "example" : "2010-07-26",
+                      "faker": "date_time:birthday"
                     }
                   }
                 },
@@ -3912,21 +4186,25 @@
                       "type" : "string",
                       "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                       "description" : "Escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. En caso de ser persona física el socio comercial, deberá proporcionar el nombre, primer y segundo apellidos; si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial.",
-                      "example" : "Banco Robmen1"
+                      "example" : "Banco Robmen1",
+                      "faker": "company:clean"
                     },
                     "rfc" : {
                       "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                       "type" : "string",
-                      "example" : "GOAP780710RH7"
+                      "example" : "GOAP780710RH7",
+                      "faker": "rfc"
                     },
                     "curp" : {
                       "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial (si es persona física)",
                       "type" : "string",
-                      "example" : "BEML920313HMCLNS09"
+                      "example" : "BEML920313HMCLNS09",
+                      "faker": "curp"
                     },
                     "domicilio" : {
                       "description" : "Este dato es información confidencial (si es persona física).",
                       "type" : "object",
+                      "faker": "fake_address",
                       "properties" : {
                         "pais" : {
                           "$ref" : "#/components/schemas/pais"
@@ -4020,7 +4298,8 @@
                       "type" : "string",
                       "format" : "date",
                       "description" : "Formato de fechas ISO 8601 con notación yyyy-mm-dd. Este dato es información confidencial.",
-                      "example" : "2010-07-26"
+                      "example" : "2010-07-26",
+                      "faker": "date_time:birthday"
                     }
                   }
                 },
@@ -4033,6 +4312,7 @@
           "bienes_intangibles" : {
             "description" : "El Declarante reportará los bienes no tangibles que conforme a la normatividad aplicable son considerados como un activo patrimonial (propiedad intelectual, derechos, patentes, licencias).",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -4044,8 +4324,10 @@
                 },
                 "propietario_registrado" : {
                   "type" : "array",
+                  "faker": "in_range:1:10",
                   "items" : {
                     "type" : "string",
+                    "faker": "full_name",
                     "description" : "Nombre/nombres de propietario de los derechos respecto de los bienes intangibles. Este dato es información confidencial."
                   },
                   "example" : [ "Sergio Perez" ]
@@ -4053,18 +4335,21 @@
                 "descripcion" : {
                   "type" : "string",
                   "description" : "Mencionar brevemente la naturaleza y características del bien intangible.",
-                  "example" : "Aquí va una descripción"
+                  "example" : "Aquí va una descripción",
+                  "faker": "lorem_text"
                 },
                 "ente_publico_encargado" : {
                   "type" : "string",
                   "description" : "Se deberá señalar el Ente Público o entidad ante el cual fue registrado el bien, los derechos y licencias del mismo.",
-                  "example" : "Presidencia de la República"
+                  "example" : "Presidencia de la República",
+                  "faker": "custom_string:Presidencia de la República"
                 },
                 "numero_registro" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá señalar el folio de registro en la institución pública en que fue registrado el bien que se declara.",
-                  "example" : 754444
+                  "example" : 754444,
+                  "faker": "in_range:10000:1000000"
                 },
                 "fecha_registro" : {
                   "$ref" : "#/components/schemas/fecha"
@@ -4091,14 +4376,16 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial.",
-                  "example" : "Vien Incorporation"
+                  "example" : "Vien Incorporation",
+                  "faker": "company:clean"
                 },
                 "porcentaje_propiedad_copropietario" : {
                   "description" : "Valor númerico porcentual. Este dato es información confidencial.",
                   "type" : "number",
                   "minimum" : 1,
                   "maximum" : 100,
-                  "example" : 70
+                  "example" : 70,
+                  "faker": "in_range:1:100"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -4109,6 +4396,7 @@
           "cuentas_por_cobrar" : {
             "description" : "El Declarante reportará aquella información que por cualquier instrumento implique que un tercero tenga una obligación respecto del Declarante que represente un potencial aumento de su patrimonio al momento de que se salde conforme a la normatividad jurídica aplicable.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -4118,16 +4406,19 @@
                 "nombre_prestatario" : {
                   "type" : "string",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. En caso de ser persona física el socio comercial, deberá proporcionar el nombre, primer y segundo apellidos; si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Max Power Tier"
+                  "example" : "Max Power Tier",
+                  "faker": "company:clean"
                 },
                 "numero_registro" : {
                   "type" : "string",
                   "description" : "Señalar el número de cuenta, contrato o cualquier dato que permita la identificación de la cuenta por cobrar que se declare, en caso de ser aplicable.",
-                  "example" : "488755avvv"
+                  "example" : "488755avvv",
+                  "faker": "id"
                 },
                 "domicilio_prestatarios" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -4227,19 +4518,22 @@
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá señalar la cantidad con la que inicialmente se generó el instrumento. Este dato es información confidencial.",
-                  "example" : 488844
+                  "example" : 488844,
+                  "faker": "in_range:1:100000"
                 },
                 "tasa_interes" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá especificar la tasa de interés convenida por el Declarante y la institución financiera estipulada en el convenio inicial.",
-                  "example" : 10.01
+                  "example" : 10.01,
+                  "faker": "in_range:1:200"
                 },
                 "saldo_pendiente" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá señalar el saldo total de la cuenta por cobrar pendiente a la fecha. Este dato es información confidencial.",
-                  "example" : 4555
+                  "example" : 4555,
+                  "faker": "in_range:1:100000"
                 },
                 "fecha_vencimiento" : {
                   "$ref" : "#/components/schemas/fecha"
@@ -4251,7 +4545,8 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. En caso de ser persona física el socio comercial, deberá proporcionar el nombre, primer y segundo apellidos; si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Max Power Banksy"
+                  "example" : "Max Power Banksy",
+                  "faker": "company:clean"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -4262,6 +4557,7 @@
           "uso_especie_propiedad_tercero" : {
             "description" : "El Declarante reportará el uso, goce o disfrute de bienes o servicios propiedad de un tercero que, al ser de manera gratuita o por un precio inferior al del mercado, no reduce el patrimonio del tercero a pesar del uso, goce o disfrute, y que implique un valor comercial superior a 1200 Unidades de Medición y Actualización (UMA) en el periodo reportado. Se deberá llenar la información por cada uno de los beneficios que se reporte.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -4271,7 +4567,8 @@
                 "tipo_bien" : {
                   "type" : "string",
                   "description" : "Se deberá indicar la naturaleza del bien o servicio del que se goza el uso o beneficios en especie por parte del Declarante.",
-                  "example" : "Bien Inmueble"
+                  "example" : "Bien Inmueble",
+                  "faker": "custom_string:Bien Inmueble"
                 },
                 "valor_mercado" : {
                   "type" : "object",
@@ -4280,7 +4577,8 @@
                       "type" : "number",
                       "minimum" : 1,
                       "description" : "Se deberá señalar el monto económico total que representa el uso, goce o disfrute del beneficio en especie propiedad de un tercero.",
-                      "example" : 4000
+                      "example" : 4000,
+                      "faker": "in_range:1:100000"
                     },
                     "moneda" : {
                       "$ref" : "#/components/schemas/moneda"
@@ -4291,17 +4589,20 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o nombres completos del tercero propietario. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "Banksy Von Trier"
+                  "example" : "Banksy Von Trier",
+                  "faker": "company:clean"
                 },
                 "rfc_tercero_propietario" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "curp_tercero_propietario" : {
                   "description" : "Se deberá escribir los 18 caracteres de la Clave Única de Registro de Población, como la emitió la Secretaría de Gobernación. Este dato es información confidencial (si es persona física)",
                   "type" : "string",
-                  "example" : "BEML920313HMCLNS09"
+                  "example" : "BEML920313HMCLNS09",
+                  "faker": "curp"
                 },
                 "relacion_persona" : {
                   "$ref" : "#/components/schemas/relacion_con_persona2"
@@ -4315,6 +4616,7 @@
                 "domicilio_persona" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -4419,6 +4721,7 @@
           "deudas" : {
             "description" : "El Declarante reportará la información sobre cualquier tipo de deuda que le implique una reducción directa o indirecta, presente o futura de su patrimonio. El Declarante reportará la información por cada una de las deudas.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -4434,6 +4737,7 @@
                 "tipo_adeudo" : {
                   "description" : "Se deberá señalar el tipo de adeudo que se declara (vehículo, crédito hipotecario, crédito personal, tarjeta de crédito, deudas comerciales u otro - especificar).",
                   "type" : "object",
+                  "faker": "from_catalog:catTipoAdeudo",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -4450,7 +4754,8 @@
                 "identificador_deuda" : {
                   "type" : "string",
                   "description" : "Se deberá indicar el número de cuenta o contrato con diversa institución que corresponda al préstamo otorgado al Declarante. Este dato es información confidencial.",
-                  "example" : "CONT12354"
+                  "example" : "CONT12354",
+                  "faker": "id"
                 },
                 "nacional_extranjero" : {
                   "$ref" : "#/components/schemas/pais"
@@ -4459,12 +4764,14 @@
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
-                  "example" : "PNBKSRIBAS SA DE CV"
+                  "example" : "PNBKSRIBAS SA DE CV",
+                  "faker": "company:clean"
                 },
                 "rfc_acreedor" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "sector_industria" : {
                   "$ref" : "#/components/schemas/sector_industria"
@@ -4472,6 +4779,7 @@
                 "domicilio_acreedor" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -4568,7 +4876,8 @@
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá señalar la cantidad con la que inicialmente el Declarante obtuvo como préstamo.",
-                  "example" : 277900
+                  "example" : 277900,
+                  "faker": "in_range:1:1000000"
                 },
                 "tipo_moneda" : {
                   "$ref" : "#/components/schemas/moneda"
@@ -4577,28 +4886,33 @@
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá especificar la tasa de interés convenida por el Declarante y el prestador estipulada en el convenio inicial.",
-                  "example" : 12
+                  "example" : 12,
+                  "faker": "in_range:1:200"
                 },
                 "saldo_pendiente" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá señalar el monto total que se encuentra pendiente de cobro por parte del prestador.",
-                  "example" : 28000
+                  "example" : 28000,
+                  "faker": "in_range:1:1000000"
                 },
                 "montos_abonados" : {
                   "type" : "array",
+                  "faker": "in_range:1:3",
                   "items" : {
                     "type" : "number",
                     "minimum" : 1,
                     "description" : "Deberá registrar los pagos abonados a la deuda en el periodo reportado.",
-                    "example" : 28000
+                    "example" : 28000,
+                    "faker": "in_range:1:1000"
                   }
                 },
                 "plazo_adeudo" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá indicar la cantidad de tiempo (días, meses, años) en la cual se convino el préstamo. En el caso de crédito hipotecario, indicar el plazo original del adeudo en años. Para compra de vehículos indicar el plazo del adeudo en meses. De haber efectuado una reestructuración indicar el plazo y monto en el apartado de observaciones/comentarios.",
-                  "example" : 24
+                  "example" : 24,
+                  "faker": "in_range:1:24"
                 },
                 "unidad_medida_adeudo" : {
                   "$ref" : "#/components/schemas/unidad_medida"
@@ -4611,13 +4925,15 @@
                 },
                 "garantia" : {
                   "type" : "boolean",
-                  "example" : true
+                  "example" : true,
+                  "faker": "boolean"
                 },
                 "nombre_garante" : {
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Observaciones/Comentarios: En caso de que requiera detallar información respecto de algún adeudo. Este dato es información confidencial (si es persona física).  ",
-                  "example" : "Banksy Von Tier"
+                  "example" : "Banksy Von Tier",
+                  "faker": "company:clean"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -4628,6 +4944,7 @@
           "otras_obligaciones" : {
             "description" : "El Declarante reportará cualquier otra obligación diferente al apartado anterior que implique una reducción de su patrimonio. El Declarante reportará la información por cada una de las obligaciones.",
             "type" : "array",
+            "faker": "in_range:1:10",
             "items" : {
               "type" : "object",
               "properties" : {
@@ -4643,6 +4960,7 @@
                 "tipo_obligacion" : {
                   "description" : "Se deberá señalar el tipo de obligación que se declara diverso a los descritos en la subsección I. Deudas, de este decimotercer numeral.",
                   "type" : "object",
+                  "faker": "from_catalog:catTipoObligacion",
                   "properties" : {
                     "codigo" : {
                       "type" : "string",
@@ -4659,7 +4977,8 @@
                 "identificador_obligacion" : {
                   "type" : "string",
                   "description" : "Se deberá indicar el número de cuenta o contrato con diversa institución que corresponda al préstamo otorgado al Declarante. Este dato es información confidencial.",
-                  "example" : "FONAET8945"
+                  "example" : "FONAET8945",
+                  "faker": "id"
                 },
                 "nacional_extranjero" : {
                   "$ref" : "#/components/schemas/pais"
@@ -4668,12 +4987,14 @@
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
-                  "example" : "Banksy"
+                  "example" : "Banksy",
+                  "faker": "company:clean"
                 },
                 "rfc_acreedor" : {
                   "description" : "En cuanto al Registro Federal de Contribuyentes, se deberá escribir como la emitió el Servicio de Administración Tributaria. Este dato es información confidencial (si es persona física).",
                   "type" : "string",
-                  "example" : "GOAP780710RH7"
+                  "example" : "GOAP780710RH7",
+                  "faker": "rfc"
                 },
                 "sector_industria" : {
                   "$ref" : "#/components/schemas/sector_industria"
@@ -4681,6 +5002,7 @@
                 "domicilio_acreedor" : {
                   "description" : "Este dato es información confidencial (si es persona física).",
                   "type" : "object",
+                  "faker": "fake_address",
                   "properties" : {
                     "pais" : {
                       "$ref" : "#/components/schemas/pais"
@@ -4777,7 +5099,8 @@
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Señalar la cantidad con la que inicialmente el Declarante obtuvo como préstamo.",
-                  "example" : 300000
+                  "example" : 300000,
+                  "faker": "in_range:1:1000000"
                 },
                 "tipo_moneda" : {
                   "$ref" : "#/components/schemas/moneda"
@@ -4785,27 +5108,32 @@
                 "tasa_interes" : {
                   "type" : "number",
                   "description" : "Se deberá especificar la tasa de interés convenida por el Declarante y el prestador estipulada en el convenio inicial.",
-                  "example" : 12
+                  "example" : 12,
+                  "faker": "in_range:1:200"
                 },
                 "saldo_pendiente" : {
                   "type" : "number",
                   "description" : "Se deberá señalar el monto total que se encuentra pendiente de cobro por parte del prestador.",
-                  "example" : 297000
+                  "example" : 297000,
+                  "faker": "in_range:1:1000000"
                 },
                 "montos_abonados" : {
                   "type" : "array",
+                  "faker": "in_range:1:3",
                   "items" : {
                     "type" : "number",
                     "minimum" : 1,
                     "description" : "Deberá registrar los pagos abonados a la deuda en el periodo reportado.",
-                    "example" : 28000
+                    "example" : 28000,
+                    "faker": "in_range:1:10000"
                   }
                 },
                 "plazo_obligacion" : {
                   "type" : "number",
                   "minimum" : 1,
                   "description" : "Se deberá indicar la cantidad de tiempo (días, meses, años) en la cual se convino el préstamo.",
-                  "example" : 360
+                  "example" : 360,
+                  "faker": "in_range:1:360"
                 },
                 "unidad_medida_plazo" : {
                   "$ref" : "#/components/schemas/unidad_medida"
@@ -4818,13 +5146,15 @@
                 },
                 "garantia" : {
                   "type" : "boolean",
-                  "example" : true
+                  "example" : true,
+                  "faker": "boolean"
                 },
                 "nombre_garante" : {
                   "type" : "string",
                   "pattern" : "^[A-Za-z0-9ñÑ.-\\s]+$",
                   "description" : "Se deberá escribir el nombre o los nombres completos. Así como los apellidos completos, sin abreviaturas y preferentemente sin acentos ni signos especiales, de la misma manera que se encuentra en el documento de identificación oficial. Si se tiene un solo apellido colocarlo en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco. Si se trata de persona moral, deberá proporcionar la denominación o razón social de la institución, tal y como se encuentra registrada en escritura pública. Observaciones/Comentarios: En caso de que requiera detallar información respecto de algún adeudo. Este dato es información confidencial (si es persona física).  ",
-                  "example" : "Banksy Von Tier"
+                  "example" : "Banksy Von Tier",
+                  "faker": "company:clean"
                 },
                 "observaciones" : {
                   "$ref" : "#/components/schemas/observaciones"
@@ -4836,6 +5166,7 @@
       },
       "domicilio" : {
         "type" : "object",
+        "faker": "fake_address",
         "properties" : {
           "pais" : {
             "$ref" : "#/components/schemas/pais"
@@ -4931,6 +5262,7 @@
       "sector_industria" : {
         "description" : "Se deberá indica el sector al que pertenece el encargo de entre los enlistados.",
         "type" : "object",
+        "faker": "from_catalog:sectorIndustrial",
         "properties" : {
           "codigo" : {
             "type" : "string",
@@ -4948,7 +5280,8 @@
       "rfc" : {
         "description" : "Se deberá escribir como la emitió el Servicio de Administración Tributaria.",
         "type" : "string",
-        "example" : "GOAP780710RH7"
+        "example" : "GOAP780710RH7",
+        "faker": "rfc"
       },
       "pais" : {
         "type" : "object",
@@ -5009,7 +5342,8 @@
         "minimum" : 1,
         "maximum" : 100,
         "description" : "Valor numérico porcentual",
-        "example" : 70
+        "example" : 70,
+        "faker": "in_range:1:100"
       },
       "nivel_orden_gobierno" : {
         "description" : "Señalar si es federal, estatal o municipal.",
@@ -5032,6 +5366,7 @@
       },
       "tipo_representacion" : {
         "type" : "object",
+        "faker": "from_catalog:catTipoRepresentacion",
         "properties" : {
           "codigo" : {
             "type" : "string",
@@ -5049,7 +5384,8 @@
       "observaciones" : {
         "type" : "string",
         "description" : "Observaciones correspondientes",
-        "example" : "Esto es una observación"
+        "example" : "Esto es una observación",
+        "faker": "lorem_text"
       },
       "ingreso_bruto_anual" : {
         "description" : "Se debera especificar el valor o monto, moneda, unidad temporal, duración o frecuencia, y en caso de que se sea una transacción única se debera poner la fecha de transacción.",
@@ -5058,7 +5394,8 @@
           "valor" : {
             "type" : "number",
             "minimum" : 1,
-            "example" : 10000
+            "example" : 10000,
+            "faker": "in_range:1:1000000"
           },
           "moneda" : {
             "$ref" : "#/components/schemas/moneda"
@@ -5070,10 +5407,12 @@
             "type" : "number",
             "minimum" : 1,
             "description" : "Duración de la frecuencia",
-            "example" : 10
+            "example" : 10,
+            "faker": "in_range:1:24"
           },
           "fecha_transaccion" : {
-            "$ref" : "#/components/schemas/fecha"
+            "$ref" : "#/components/schemas/fecha",
+            "faker": "date_time:birthday"
           }
         }
       },
@@ -5095,6 +5434,7 @@
       },
       "toperacion1" : {
         "type" : "object",
+        "faker": "from_catalog:catTipoOperacion1",
         "properties" : {
           "codigo" : {
             "type" : "string",
@@ -5111,6 +5451,7 @@
       },
       "toperacion2" : {
         "type" : "object",
+        "faker": "from_catalog:catTipoOperacion2",
         "properties" : {
           "codigo" : {
             "type" : "string",
@@ -5127,6 +5468,7 @@
       },
       "toperacion3" : {
         "type" : "object",
+        "faker": "from_catalog:catTipoOperacion3",
         "properties" : {
           "codigo" : {
             "type" : "string",
@@ -5143,6 +5485,7 @@
       },
       "tipo_bien" : {
         "type" : "object",
+        "faker": "from_catalog:catTipoBien",
         "properties" : {
           "codigo" : {
             "type" : "string",
@@ -5159,6 +5502,7 @@
       },
       "forma_adquisicion" : {
         "type" : "object",
+        "faker": "from_catalog:catFormaAdquisicion",
         "properties" : {
           "codigo" : {
             "type" : "string",
@@ -5214,7 +5558,8 @@
             "type" : "number",
             "minimum" : 1,
             "description" : "Valor numérico del precio de adquisición",
-            "example" : 4000
+            "example" : 4000,
+            "faker": "in_range:1:10000000"
           },
           "moneda" : {
             "$ref" : "#/components/schemas/moneda"
@@ -5227,17 +5572,20 @@
           "codigo" : {
             "type" : "string",
             "description" : "Código de la moneda de acuerdo al estándar ISO 4217",
-            "example" : "MXN"
+            "example" : "MXN",
+            "faker": "custom_string:MXN"
           },
           "moneda" : {
             "type" : "string",
             "description" : "Divisa de la moneda de acuerdo al estándar ISO 4217",
-            "example" : "MXN"
+            "example" : "MXN",
+            "faker": "custom_string:MXN"
           }
         }
       },
       "titular_bien" : {
         "type" : "object",
+        "faker": "from_catalog:catTitulaBien",
         "properties" : {
           "codigo" : {
             "type" : "string",
@@ -5281,6 +5629,7 @@
       "funciones" : {
         "description" : "Se deberá indicar las funciones principales a realizar por el Servidor Público de entre los enlistados.",
         "type" : "array",
+        "faker": "in_range:1:5",
         "items" : {
           "type" : "object",
           "properties" : {
@@ -5317,6 +5666,7 @@
       "tipo_acreedor" : {
         "description" : "Se deberá seleccionar el tipo de prestador que corresponda al adeudo que declare (institución financiera, persona moral no financiera, persona física u otro - especificar).",
         "type" : "object",
+        "faker": "from_catalog:catTipoAcreedor",
         "properties" : {
           "codigo" : {
             "type" : "string",
@@ -5332,6 +5682,7 @@
       },
       "unidad_medida" : {
         "type" : "object",
+        "faker": "from_catalog:catUnidadMedidaPlazo",
         "properties" : {
           "codigo" : {
             "type" : "string",

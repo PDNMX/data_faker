@@ -119,10 +119,14 @@ class DataFaker:
     def save(data, name, dst='db', options=None):
         if dst == 'db':
             options = DotMap(options)
-            client = MongoClient(host=options.host, port=options.port)
+            if options.host is not 'localhost':
+                client = MongoClient(host=options.host, port=options.port, username=options.user, password=options.password)
+            else:
+                client = MongoClient(host=options.host, port=options.port)
+
             db = client[options.db]
             collection = db[name]
-            collection.remove()
+            #collection.remove()
             res = collection.insert_many(data)
             return res
         elif dst == 'file':
