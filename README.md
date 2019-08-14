@@ -1,4 +1,5 @@
-# Generador de datos faker
+# Generador de datos faker [![Build Status](https://travis-ci.org/PDNMX/data_faker.svg?branch=master)](https://travis-ci.org/PDNMX/data_faker)
+
 
 ## ¿Qué es y para qué sirve?
 Es un generador de datos basado en la definición de los datos y su estructura en formato .json
