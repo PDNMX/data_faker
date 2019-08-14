@@ -52,17 +52,17 @@ Para mayor referencia por favor vea el archivo original de [declaraciones.json] 
 
 Argumentos
 ```
-usage: main.py [-n SAMPLES] [-y YEARS]
+usage: main.py [-s SAMPLES] [-y YEARS]
 
 optional arguments:
-  -n SAMPLES, --samples SAMPLES     Number of samples
+  -s SAMPLES, --samples SAMPLES     Number of samples
   -y YEARS, --years YEARS       Number of years by declarant (integer value)
 ```
 #### Ejemplo
 
 Uso para generar declaraciones ficticias de 5 declarantes en un periodo de 5 años consecutivos.
 ```
-$ python main.py -n 5 -y 5
+$ python main.py -s 5 -y 5
 
 ```
 
