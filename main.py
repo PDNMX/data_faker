@@ -22,11 +22,11 @@ args = parser.parse_args()
 number_of_samples = args.samples
 years = args.years
 
-dbname = os.environ.get('DATAGEN_MONGO_HOST', 'oas')
-host = os.environ.get('DATAGEN_MONGO_HOST', 'localhost')
-port = os.environ.get('DATAGEN_MONGO_PORT', 27017)
-user = os.environ.get('DATAGEN_MONGO_USER', None)
-password = os.environ.get('DATAGEN_MONGO_PASS', None)
+dbname = os.environ.get('DATAFAKE_MONGO_DB_NAME', 'oas')
+host = os.environ.get('DATAFAKE_MONGO_HOST', 'localhost')
+port = os.environ.get('DATAFAKE_MONGO_PORT', 27017)
+user = os.environ.get('DATAFAKE_MONGO_USER', None)
+password = os.environ.get('DATAFAKE_MONGO_PASS', None)
 
 if __name__ == '__main__':
     path_to_file = './oas/declaraciones_with_faker.json'
