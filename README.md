@@ -30,7 +30,7 @@ export DATAFAKE_MONGO_USER=user
 export DATAFAKE_MONGO_PASS=password
 ```
 ### Preparación de la definición de datos
-1. Se debe editar la definición de la estructura de los datos agregando el tipo de dato "faker" que se desea tener en cada campo, por ejemplo:
+1. Se requiere editar la definición de la estructura de los datos agregando el tipo de dato "faker" que se desea tener en cada campo, por ejemplo:
 
 ```
 "results" : {
