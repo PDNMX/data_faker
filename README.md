@@ -53,17 +53,37 @@ Para mayor referencia por favor vea el archivo original de [declaraciones.json] 
 
 Argumentos
 ```
-usage: main.py [-s SAMPLES] [-y YEARS]
+usage: main.py [-s {1,2,3}] [-n SAMPLES] [-y YEARS]
 
 optional arguments:
-  -s SAMPLES, --samples SAMPLES     Number of samples
+  -s {1,2,3}, --sys {1,2,3}         System number
+  -n SAMPLES, --samples SAMPLES     Number of samples
   -y YEARS, --years YEARS       Number of years by declarant (integer value)
 ```
 #### Ejemplo
 
 Uso para generar declaraciones ficticias de 5 declarantes en un periodo de 5 años consecutivos.
 ```
-$ python main.py -s 5 -y 5
+$ python main.py -s 1 -n 5 -y 5
+
+```
+
+### Sistema 2 .-Servidores públicos que intervienen en contrataciones
+
+Argumentos
+```
+usage: main.py [-s {1,2,3}] [-n SAMPLES] [-y YEARS]
+
+optional arguments:
+  -s {1,2,3}, --sys {1,2,3}         System number
+  -n SAMPLES, --samples SAMPLES     Number of samples
+  -y YEARS, --years YEARS       Number of years by declarant (integer value)
+```
+#### Ejemplo
+
+Uso para generar documentos ficticios de 5 servidores públicos que intervienen en contrataciones en un periodo de 1 año.
+```
+$ python main.py -s 2 -n 5 -y 1
 
 ```
 

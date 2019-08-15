@@ -219,7 +219,7 @@
           },
           "results" : {
             "type" : "array",
-            "faker": "int:5",
+            "faker": "seed:samples",
             "items" : {
               "type" : "object",
               "properties" : {
