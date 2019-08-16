@@ -1,15 +1,16 @@
 import argparse
-from datafaker import DataFaker
-import json
-from util import benchmark, Seed, code
 import copy
+import os
+from datetime import datetime
+
 import dateparser
 from dateutil.relativedelta import relativedelta
-import dns
-import os
+from progress.bar import Bar
 from pyfiscal import generate
-from datetime import datetime
 from unidecode import unidecode
+
+from datafaker import DataFaker
+from util import benchmark, Seed
 
 parser = argparse.ArgumentParser(description='Data Faker')
 
@@ -24,6 +25,7 @@ args = parser.parse_args()
 sys_number = args.sys
 number_of_samples = args.samples
 years = args.years
+bar1 = Bar('Procesando:', max=number_of_samples)
 
 dbname = os.environ.get('DATAFAKE_MONGO_DB_NAME', 'oas')
 host = os.environ.get('DATAFAKE_MONGO_HOST', 'localhost')
@@ -39,25 +41,10 @@ if __name__ == '__main__':
     if sys_number == 1:
         path_to_file = './oas/declaraciones_with_faker.json'
         path_to_schema = '#/components/schemas/Declaraciones/properties/results'
-        document_id_seed = Seed(
-            name='document_id',
-            props={'n': n},
-            state={'count': 0},
-            next_state=lambda seed: {'count': seed.state.count + 1},
-            initial_value=lambda seed, node: code(),
-            next_value=lambda seed, node: seed.value if seed.state.count % seed.props.n != 0 else seed.reset(node)
-        )
-        document_samples = Seed(
-            name='samples',
-            props={'n': years},
-            state={'count': 0},
-            next_state=lambda seed: {'count': seed.state.count + 1},
-            initial_value=lambda seed, node: years,
-            next_value=lambda seed, node: seed.value
-        )
 
         def next_personal_info(seed, node):
-            if seed.state.count % seed.props.n != 0:
+            if seed.state.count2 % seed.props.y != 0:
+                # print("update")
                 # Update  year
                 dt = seed.value['informacion_general']['fecha_declaracion']
                 dt = (dateparser.parse(dt) + relativedelta(months=12)).isoformat()
@@ -65,6 +52,8 @@ if __name__ == '__main__':
                 data['informacion_general']['fecha_declaracion'] = dt
                 return data
             else:
+                # print("reset")
+                bar1.next()
                 return seed.reset(node)
 
         def get_initial_pi(seed, node):
@@ -87,55 +76,50 @@ if __name__ == '__main__':
             data['informacion_general']['rfc'] = generate.GenerateRFC(**kwargs).data
             return data
 
-        for x in range(0, number_of_samples):
+
+        with benchmark('data faker'):
+
+            document_samples = Seed(
+                name='samples',
+                props={'s': number_of_samples * years},
+                state={'count1': 0},
+                next_state=lambda seed: {'count1': seed.state.count + 1},
+                initial_value=lambda seed, node: number_of_samples * years,
+                next_value=lambda seed, node: seed.value if seed.state.count1 % seed.props.s != 0 else seed.reset(node)
+            )
+
             personal_info = Seed(
                 name='informacion_personal',
-                props={'n': n},
-                state={'count': 0},
-                next_state=lambda seed: {'count': seed.state.count + 1},
+                props={'y': years + 1},
+                state={'count2': 1},
+                next_state=lambda seed: {'count2': seed.state.count2 + 1},
                 initial_value=get_initial_pi,
                 next_value=next_personal_info
             )
-            with benchmark('data faker'):
-                data_faker = DataFaker(path_to_file, path_to_schema, path_to_catalogs)
-                data_faker.add_seed(document_id_seed)
-                data_faker.add_seed(document_samples)
-                data_faker.add_seed(personal_info)
-                fake_data = data_faker.fake()
-                # print(json.dumps(fake_data, indent=2))
-                print("send_save_" + str(x))
-                DataFaker.save(
-                    fake_data,
-                    's1',
-                    'db',
-                    dict(db=dbname, host=host, port=port, user=user, password=password)
-                )
+
+            data_faker = DataFaker(path_to_file, path_to_schema, path_to_catalogs)
+            data_faker.add_seed(document_samples)
+            data_faker.add_seed(personal_info)
+
+            fake_data = data_faker.fake()
+            # print(json.dumps(fake_data, indent=2))
+
+            DataFaker.save(
+                fake_data,
+                's1',
+                'db',
+                dict(db=dbname, host=host, port=port, user=user, password=password)
+            )
+            bar1.next()
+            bar1.finish()
 
     elif sys_number == 2:
         path_to_file = './oas/OAS_API_servidores_intervienen_contrataciones_with_faker.json'
         path_to_schema = '#/components/schemas/spic/properties/results'
 
-        document_id_seed = Seed(
-            name='document_id',
-            props={'n': n},
-            state={'count': 0},
-            next_state=lambda seed: {'count': seed.state.count + 1},
-            initial_value=lambda seed, node: code(),
-            next_value=lambda seed, node: seed.value if seed.state.count % seed.props.n != 0 else seed.reset(node)
-        )
-
-        document_samples = Seed(
-            name='samples',
-            props={'n': number_of_samples},
-            state={'count': 0},
-            next_state=lambda seed: {'count': seed.state.count + 1},
-            initial_value=lambda seed, node: years,
-            next_value=lambda seed, node: seed.value
-        )
-
 
         def next_document_info(seed, node):
-            if seed.state.count % seed.props.n != 0:
+            if seed.state.count2 % seed.props.y != 0:
                 # Update  year
                 dt = seed.value['fecha_captura']
                 dt = (dateparser.parse(dt) + relativedelta(months=12)).isoformat()
@@ -143,6 +127,7 @@ if __name__ == '__main__':
                 data['fecha_captura'] = dt
                 return data
             else:
+                bar1.next()
                 return seed.reset(node)
 
 
@@ -151,30 +136,41 @@ if __name__ == '__main__':
             return data
 
 
-        for x in range(0, number_of_samples):
-            document_info = Seed(
-                name='servidores',
-                props={'n': n},
-                state={'count': 0},
-                next_state=lambda seed: {'count': seed.state.count + 1},
-                initial_value=get_initial_document,
-                next_value=next_document_info
+        # for x in range(0, number_of_samples):
+
+        document_samples = Seed(
+            name='samples',
+            props={'s': number_of_samples * years},
+            state={'count1': 0},
+            next_state=lambda seed: {'count1': seed.state.count1 + 1},
+            initial_value=lambda seed, node: number_of_samples * years,
+            next_value=lambda seed, node: seed.value if seed.state.count1 % seed.props.s != 0 else seed.reset(node)
+        )
+
+        document_info = Seed(
+            name='servidores',
+            props={'y': years + 1},
+            state={'count2': 1},
+            next_state=lambda seed: {'count2': seed.state.count2 + 1},
+            initial_value=get_initial_document,
+            next_value=next_document_info
+        )
+        with benchmark('data faker'):
+            data_faker = DataFaker(path_to_file, path_to_schema, path_to_catalogs)
+            data_faker.add_seed(document_samples)
+            data_faker.add_seed(document_info)
+            fake_data = data_faker.fake()
+            # del fake_data['id']
+            # print(json.dumps(fake_data, indent=2))
+
+            DataFaker.save(
+                fake_data,
+                's2',
+                'db',
+                dict(db=dbname, host=host, port=port, user=user, password=password)
             )
-            with benchmark('data faker'):
-                data_faker = DataFaker(path_to_file, path_to_schema, path_to_catalogs)
-                data_faker.add_seed(document_id_seed)
-                data_faker.add_seed(document_samples)
-                data_faker.add_seed(document_info)
-                fake_data = data_faker.fake()
-                # del fake_data['id']
-                # print(json.dumps(fake_data, indent=2))
-                print("send_save_" + str(x))
-                DataFaker.save(
-                    fake_data,
-                    's2',
-                    'db',
-                    dict(db=dbname, host=host, port=port, user=user, password=password)
-                )
+            bar1.next()
+            bar1.finish()
     elif sys_number == 3:
         path_to_file = ''
         path_to_schema = ''

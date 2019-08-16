@@ -227,7 +227,7 @@
                   "type" : "string",
                   "description" : "Identificador del declarante con valor alfanumérico",
                   "example" : "a1b2c3d4",
-                  "faker": "seed:document_id"
+                  "faker": "id"
                 },
                 "metadata" : {
                   "type" : "object",

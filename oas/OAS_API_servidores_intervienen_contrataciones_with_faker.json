@@ -255,7 +255,7 @@
                   "type": "string",
                   "description": "Dato que permita identificar de manera  unívoca al registro",
                   "example": "string",
-                  "faker": "seed:document_id"
+                  "faker": "id"
                 },
                 "fecha_captura": {
                   "type": "string",

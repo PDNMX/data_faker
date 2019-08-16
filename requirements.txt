@@ -16,4 +16,5 @@ tzlocal==1.5.1
 dnspython==1.16.0
 unidecode==1.1.1
 xlrd==1.0.0
+progress==1.5
 git+git://github.com/devskrin/pyfiscal.git@e72f33bbf65011d4bd94fe53e4c7e2f89284d0f9
